@@ -23,15 +23,15 @@ void usart_init(void)
     // in 2 registri pe 8 biti
     UBRR0H = (BAUD_REGISTER >> 8);
     UBRR0L =  BAUD_REGISTER;
-	UCSR0A |= ( 1 << U2X0 );
+    UCSR0A |= ( 1 << U2X0 );
     // Porneste transmisie si receptie pe USART + intrerupere
-	UCSR0B |= (1 << RXEN0 ) | (1 << TXEN0 ) | ( 1 << RXCIE0 );
+    UCSR0B |= (1 << RXEN0 ) | (1 << TXEN0 ) | ( 1 << RXCIE0 );
     // Seteaza modul de transmisie :
     //      - asincron
     //      - fara biti de paritate
     //      - 8 biti de date
     //      - 1 bit de stop
-	UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);
+    UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);
 }
 
 void usart_tx(char data)
