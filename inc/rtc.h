@@ -9,7 +9,7 @@
 #define RTC_SECUNDE         0x03
 #define RTC_MINUTE          0x04
 #define RTC_ORA             0x06
-#define RTC_ZI              0x06
+#define RTC_ZI              0x07
 #define RTC_LUNA            0x08
 #define RTC_AN              0x09
 #define RTC_STOP            0x20
