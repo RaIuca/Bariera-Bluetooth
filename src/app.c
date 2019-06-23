@@ -92,13 +92,21 @@ void app_eroare(void)
 void app_bluetooth_init(void)
 {
 	// Trimite comenzile de configurare pentru modulul Bluetooth
+	// Deconecteaza modulul
   	usart_tx_string("AT");
+	// Seteaza modulul ca slave
   	usart_tx_string("AT+ROLE0");
+	// Seteaza adresa MAC 00:15:87:12:E0:68
   	usart_tx_string("AT+LADDR00:15:87:12:E0:68");
+	// Nu cere PIN
   	usart_tx_string("AT+TYPE0");
+	// Seteaza UUID
   	usart_tx_string("AT+UUID0xFFE0");
+	// Seteaza CHAR
   	usart_tx_string("AT+CHAR0xFFE1");
+	// Porneste notificarile la conectare
   	usart_tx_string("AT+NOTI1");
+	// Seteaza numele de broadcast
   	usart_tx_string("AT+NAMEbariera");
 }
 
@@ -149,11 +157,11 @@ int app_test_memorie()
 	unsigned char date_scris[4] = {'t','e','s','t'};
 	unsigned char date_citit[4] = {'x','x','x','x'};
 	// Scrie in eeprom datele referitoare la timp
-	iic_scrie_date_registru(EEPROM_ADRESA_SLAVE, 00, date_scris, 4);
+	iic_scrie_date_registru(EEPROM_ADRESA_SLAVE, 999, date_scris, 4);
 	// Delay intre scriere si citre
 	_delay_ms(100);
 	// Face o citire initiala pentru a se asigura ca persoana nu a fost pontata de intrare anterior
-	iic_citeste_date_registru(EEPROM_ADRESA_SLAVE, 00, date_citit, 4);
+	iic_citeste_date_registru(EEPROM_ADRESA_SLAVE, 999, date_citit, 4);
 	for(index = 0; index < 4; index++)
 	{
 		if(date_scris[index] != date_citit[index])
@@ -236,7 +244,7 @@ void app_procesare_date(void)
 			eeprom_adresa_scriere = app_conversie_date(usart_buffer, APP_LUGNIME_USER);
 			// Aranjeaza adresa astfel incat sa nu se suprapuna datele si sa poata fi gasita usor
 			eeprom_adresa_scriere *= APP_LUNGIME_DATE_EEPROM;
-			// Face o citire initiala pentru a se asigura ca persoana nu a fost pontata de intrare anterior
+			// Face o citire initiala pentru a se asigura ca persoana nu a fost pontata de iesire anterior
 			iic_citeste_date_registru(EEPROM_ADRESA_SLAVE, eeprom_adresa_scriere, date_verificare, APP_LUNGIME_DATE_EEPROM);
 			// Verifica datele
 			index = 0;
@@ -306,7 +314,7 @@ void app_initializare(void)
 {
 	// Initializeaza usart la 9600 baud
 	usart_init();
-	// Initializeaza iic la 100KHz
+	// Initializeaza iic la 400KHz
 	iic_init();
 	// Initializare rtc
 	rtc_init();
