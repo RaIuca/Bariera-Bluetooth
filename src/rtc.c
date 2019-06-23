@@ -83,7 +83,6 @@ void rtc_init()
     unsigned char reg_1 = 0x00;
     unsigned char reg_2 = 0x00;
     unsigned char reg_3 = 0x01;
-    timp timp_initial = {0, 0, 0, 0, 0, 0};
     // Porneste RTC
     // Seteaza mod 24H
     // Opreste intreruperile
@@ -96,8 +95,6 @@ void rtc_init()
         // Se semnaleaza erorile daca apar
         usart_tx_string_new_line("RTC: Eroare initializare RTC");
     }
-    // Seteaza timpul initial 0
-    rtc_seteaza_timp(timp_initial);
     // Porneste rtc-ul
     rtc_start();
 }
@@ -137,12 +134,12 @@ void rtc_seteaza_timp(timp timp_set)
     // Opreste ceasul
     rtc_stop();
     // Scrie datele convertite in bcd
-    rtc_scrie(RTC_SECUNDE,rtc_decimal_transf_bcd(timp_set.secunde));
-    rtc_scrie(RTC_MINUTE,rtc_decimal_transf_bcd(timp_set.minute));
-    rtc_scrie(RTC_ORA,rtc_decimal_transf_bcd(timp_set.ora));
-    rtc_scrie(RTC_ZI,rtc_decimal_transf_bcd(timp_set.zi));
-    rtc_scrie(RTC_LUNA,rtc_decimal_transf_bcd(timp_set.luna));
-    rtc_scrie(RTC_AN,rtc_decimal_transf_bcd(timp_set.an));
+    rtc_scrie(RTC_SECUNDE,timp_set.secunde);
+    rtc_scrie(RTC_MINUTE,timp_set.minute);
+    rtc_scrie(RTC_ORA,timp_set.ora);
+    rtc_scrie(RTC_ZI,timp_set.zi);
+    rtc_scrie(RTC_LUNA,timp_set.luna);
+    rtc_scrie(RTC_AN,timp_set.an);
     // Porneste ceasul
     rtc_start();
 }
@@ -152,12 +149,12 @@ timp rtc_citeste_timp()
     timp timp_citit;
 
     // Citeste datele si le salveaza in structura
-    timp_citit.secunde = rtc_bcd_transf_decimal(rtc_citeste(RTC_SECUNDE));
-    timp_citit.minute  = rtc_bcd_transf_decimal(rtc_citeste(RTC_MINUTE));
-    timp_citit.ora     = rtc_bcd_transf_decimal(rtc_citeste(RTC_ORA));
-    timp_citit.zi      = rtc_bcd_transf_decimal(rtc_citeste(RTC_ZI));
-    timp_citit.luna    = rtc_bcd_transf_decimal(rtc_citeste(RTC_LUNA));
-    timp_citit.an      = rtc_bcd_transf_decimal(rtc_citeste(RTC_AN));
+    timp_citit.secunde = rtc_citeste(RTC_SECUNDE);
+    timp_citit.minute  = rtc_citeste(RTC_MINUTE);
+    timp_citit.ora     = rtc_citeste(RTC_ORA);
+    timp_citit.zi      = rtc_citeste(RTC_ZI);
+    timp_citit.luna    = rtc_citeste(RTC_LUNA);
+    timp_citit.an      = rtc_citeste(RTC_AN);
 
     // Returnaeza datele
     return timp_citit;
@@ -175,6 +172,7 @@ timp rtc_diferenta_timp(timp t1, timp t2)
     }
     else
     {
+        diferenta.an--;
         diferenta.luna = 12 - t1.luna + t2.luna;
     }
 
@@ -184,7 +182,8 @@ timp rtc_diferenta_timp(timp t1, timp t2)
     }
     else
     {
-        diferenta.zi = 30 - t2.zi - t1.zi;
+        diferenta.luna--;
+        diferenta.zi = 30 - t2.zi + t1.zi;
     }
 
     if(t2.ora >= t1.ora)
@@ -193,7 +192,8 @@ timp rtc_diferenta_timp(timp t1, timp t2)
     }
     else
     {
-        diferenta.ora = 24 - t2.ora - t1.ora;
+        diferenta.zi--;
+        diferenta.ora = 24 - t2.ora + t1.ora;
     }
     
     if(t2.minute >= t1.minute)
@@ -202,16 +202,18 @@ timp rtc_diferenta_timp(timp t1, timp t2)
     }
     else
     {
-        diferenta.minute = 60 - t2.minute - t1.minute;
+        diferenta.ora--;
+        diferenta.minute = 60 - t2.minute + t1.minute;
     }
     
     if(t2.secunde >= t1.secunde)
     {
-        diferenta.secunde = t2.secunde - t1.secunde;
+        diferenta.secunde = t2.secunde + t1.secunde;
     }
     else
     {
-        diferenta.secunde =  60 - t2.secunde - t1.secunde;
+        diferenta.minute--;
+        diferenta.secunde =  60 - t2.secunde + t1.secunde;
     }
     
     // Returneaza diferenta de timp
@@ -220,7 +222,7 @@ timp rtc_diferenta_timp(timp t1, timp t2)
 
 void rtc_afiseaza_timp(timp t)
 {
-    // Trimite datele respartite de caracterul ':'
+    // Trimite datele despartite de caracterul ':'
     usart_tx_string("An :");
     usart_tx_string(rtc_hex_transf_string(t.an));
     usart_tx('|');
