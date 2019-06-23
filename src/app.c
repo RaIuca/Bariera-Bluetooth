@@ -170,6 +170,9 @@ int app_test_memorie()
 			return APP_EROARE;
 		}
 	}
+	// Sterge datele din memorie
+	iic_sterge_registru(EEPROM_ADRESA_SLAVE, 999, APP_DATE_NESCRISE, 4);
+			
 	return APP_MEMORIE_INITIALIZATA;
 }
 
