@@ -169,8 +169,6 @@ ISR (USART_RX_vect)
         // Verifica daca e sfarsut de linie
         if(byte_receptionat == USART_CARACTER_SFARSIT)
         {
-            usart_tx_string("Comanda primita : ");
-            usart_tx_string(usart_buffer);
             // Proceseaza datele
             app_procesare_date();
             usart_golire_buffer();
