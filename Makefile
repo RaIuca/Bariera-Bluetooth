@@ -8,18 +8,18 @@ TARGET		=${addprefix ${OBJDIR},/${NAME}}
 CC      	= toolchain/bin/avr-gcc.exe
 OBJCOPY 	= toolchain/bin/avr-objcopy.exe
 AVRDUDE		= toolchain/prog/avrdude.exe
-CFLAGS  	= 	-std=c99 			\
-				-Wall 				\
-				-Wextra 			\
-				-g 					\
-				-Os 				\
-				-mmcu=${MCU}		\
-				-DF_CPU=${F_CPU}	
-SRCS		= 	app.c				\
-				iic.c				\
-				rtc.c				\
-				timer.c				\
-				usart.c		
+CFLAGS  	= 	-std=c99 		\
+			-Wall 			\
+			-Wextra 		\
+			-g 			\
+			-Os 			\
+			-mmcu=${MCU}		\
+			-DF_CPU=${F_CPU}	
+SRCS		= 	app.c			\
+			iic.c			\
+			rtc.c			\
+			timer.c			\
+			usart.c		
 
 compile:
 
@@ -35,7 +35,7 @@ compile:
 flash:
 	@echo **************************************************
 	@echo *	Scrie programul in controller...
-	@avrdude -p ${MCU} -c usbasp -U flash:w:${TARGET}.hex:i -F -P usb
+	@${AVRDUDE} -p ${MCU} -c usbasp -U flash:w:${TARGET}.hex:i -F -P usb
 
 re:	$(clear) clean compile
 
