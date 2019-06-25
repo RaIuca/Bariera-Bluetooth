@@ -8,17 +8,17 @@ TARGET		=${addprefix ${OBJDIR},/${NAME}}
 CC      	= toolchain/bin/avr-gcc.exe
 OBJCOPY 	= toolchain/bin/avr-objcopy.exe
 AVRDUDE		= toolchain/prog/avrdude.exe
-CFLAGS  	= 	-std=c99 		\
-			-Wall 			\
-			-Wextra 		\
-			-g 			\
-			-Os 			\
-			-mmcu=${MCU}		\
+CFLAGS  	= 	-std=c99 			\
+			-Wall 				\
+			-Wextra 			\
+			-g 				\
+			-Os 				\
+			-mmcu=${MCU}			\
 			-DF_CPU=${F_CPU}	
-SRCS		= 	app.c			\
-			iic.c			\
-			rtc.c			\
-			timer.c			\
+SRCS		= 	app.c				\
+			iic.c				\
+			rtc.c				\
+			timer.c				\
 			usart.c		
 
 compile:
@@ -42,6 +42,6 @@ re:	$(clear) clean compile
 clean:
 	@echo **************************************************
 	@echo *	Sterge fisier obiecte...
-	@rm ${OBJDIR}/*
+	@del  /F /Q /A $(OBJDIR)
 
 qflash: clean compile flash
