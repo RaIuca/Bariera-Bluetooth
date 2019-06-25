@@ -99,7 +99,7 @@ void rtc_init()
     rtc_start();
 }
 
-char rtc_citeste(unsigned char parametru)
+char  rtc_citeste(unsigned char parametru)
 {
     unsigned char date_citite = 0, conversie_date;
 
@@ -110,7 +110,7 @@ char rtc_citeste(unsigned char parametru)
         usart_tx_string_new_line("RTC: Eroare citire");
     }
     // Face conversia datelor
-    conversie_date = rtc_bcd_transf_decimal(date_citite);
+    conversie_date = rtc_bcd_transf_decimal((char)date_citite);
     // Returneaza datele
     return conversie_date;
 }
@@ -173,7 +173,7 @@ timp rtc_diferenta_timp(timp t1, timp t2)
     else
     {
         diferenta.an--;
-        diferenta.luna = 12 - t1.luna + t2.luna;
+        diferenta.luna = 12 + t2.luna - t1.luna;
     }
 
     if(t2.zi >= t1.zi)
@@ -183,7 +183,7 @@ timp rtc_diferenta_timp(timp t1, timp t2)
     else
     {
         diferenta.luna--;
-        diferenta.zi = 30 - t2.zi + t1.zi;
+        diferenta.zi = 30 + t2.zi - t1.zi;
     }
 
     if(t2.ora >= t1.ora)
@@ -193,7 +193,7 @@ timp rtc_diferenta_timp(timp t1, timp t2)
     else
     {
         diferenta.zi--;
-        diferenta.ora = 24 - t2.ora + t1.ora;
+        diferenta.ora = 24 + t2.ora - t1.ora;
     }
     
     if(t2.minute >= t1.minute)
@@ -203,17 +203,17 @@ timp rtc_diferenta_timp(timp t1, timp t2)
     else
     {
         diferenta.ora--;
-        diferenta.minute = 60 - t2.minute + t1.minute;
+        diferenta.minute = 60 + t2.minute - t1.minute;
     }
     
     if(t2.secunde >= t1.secunde)
     {
-        diferenta.secunde = t2.secunde + t1.secunde;
+        diferenta.secunde = t2.secunde - t1.secunde;
     }
     else
     {
         diferenta.minute--;
-        diferenta.secunde =  60 - t2.secunde + t1.secunde;
+        diferenta.secunde =  60 + t2.secunde - t1.secunde;
     }
     
     // Returneaza diferenta de timp
