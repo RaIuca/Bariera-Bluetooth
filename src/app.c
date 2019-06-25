@@ -274,6 +274,12 @@ void app_procesare_date(void)
 			}
 			// Citeste timpul curent
 			timp_curent = rtc_citeste_timp();
+			// Afisare timp intrare			
+			usart_tx_string("IN : ");
+			rtc_afiseaza_timp(timp_intrare);
+			// Afisare timp iesire			
+			usart_tx_string("OUT : ");
+			rtc_afiseaza_timp(timp_curent);
 			// Salveaza timpul de intrare
 			timp_intrare = app_conversie_string(date_verificare);
 			// Calculeaza diferenta
